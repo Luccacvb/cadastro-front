@@ -16,6 +16,7 @@ function App() {
   useEffect(
     () => {
       buscarCadastroTable()
+      
     }, []
   )
 
