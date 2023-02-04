@@ -5,7 +5,7 @@ import { Button, Form, InputGroup, Table } from 'react-bootstrap';
 import { BsTrash } from 'react-icons/bs'
 
 function App() {
-  const [cadastros, setCadastros] = useState([])
+  const [usuarios, setUsuarios] = useState([])
 
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
@@ -16,36 +16,35 @@ function App() {
   useEffect(
     () => {
       buscarCadastroTable()
-      
+
     }, []
   )
 
   async function buscarCadastroTable() {
     await api.get('/cadastro').then((response) => {
-      setCadastros(response.data)
+      setUsuarios(response.data)
     })
 
   }
 
   async function cadastrarUsuario() {
-    const cadastro = {
+    const usuario = {
       email,
       cpf,
       nome,
       nascimento,
     }
 
-    await api.post('/cadastro', cadastro).then((response) => {
-      setCadastros([...cadastros, response.data])
-      alert('Usuario cadastrado com sucesso!')
-      limparForm()
-    }).catch(() => {
-      if (cadastro.cpf === cpf) {
-        alert("CPF ja cadastrado")
-      } else if (cadastro.email === email) {
-        alert("Email ja cadastrado")
-      }
-    })
+
+    if (cpf) {
+      await api.post('/cadastro', usuario).then((response) => {
+        setUsuarios([...usuarios, response.data])
+        alert('Usuario cadastrado com sucesso!')
+        limparForm();
+      })
+    } else {
+      alert('Digite um CPF valido')
+    }
 
   }
 
@@ -110,7 +109,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {cadastros.map((c) => {
+          {usuarios.map((c) => {
             return (
               <tr>
                 <td>{c.id}</td>
